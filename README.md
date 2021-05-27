@@ -1,1 +1,1 @@
-"# aspit-guest-counter" 
+# aspit-guest-counter
