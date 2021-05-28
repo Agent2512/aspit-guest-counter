@@ -1,4 +1,4 @@
-@import "config/config-dir";
+@import "config/config-dir", "components/components_dir";
 
 * {
     margin: 0;
@@ -9,4 +9,35 @@
     word-spacing: 0;
     text-shadow: none;
     box-shadow: none;
+}
+html,
+body,
+#__next {
+    width: 100%;
+    height: 100%;
+}
+#__next {
+    display: grid;
+    grid-template-rows: min-content auto;
+    grid-template-areas:
+        "header"
+        "main";
+
+    & > #mainHeader {
+        grid-area: header;
+    }
+
+    & > main {
+        grid-area: main;
+
+        background-color: $bg-primary;
+
+        padding: 1% 1% 0 1%;
+    }
+}
+.white-fill {
+    fill: $white;
+}
+.red-fill {
+    fill: $red;
 }

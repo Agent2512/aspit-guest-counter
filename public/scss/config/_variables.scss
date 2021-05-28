@@ -1,6 +1,12 @@
-$primary: #000;
-$secondary: #fff;
-
+$black: #000;
 $white: #fff;
 $orange: #ff5747;
-$green: #29675a;
+$green: #29675A;
+$red:#f00;
+
+$primary: $black;
+$secondary: $white;
+
+$bg-primary: $green;
+$bg-primary-darken: darken($bg-primary, 7);
+$bg-primary-lighten: lighten($bg-primary, 15);

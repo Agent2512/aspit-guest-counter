@@ -1,0 +1,52 @@
+#mainHeader {
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr;
+    background-color: $bg-primary-lighten;
+    border-bottom: 0.4rem solid $bg-primary-darken;
+
+    height: 10rem;
+
+    & > svg {
+        width: 90%;
+        height: 90%;
+
+        @include respond(small) {
+            display: none;
+        }
+    }
+
+    & >  h1 {
+        height: min-content;
+        margin: auto 0;
+        color: $secondary;
+        text-transform: capitalize;
+    }
+
+    @include respond(medium) {
+        grid-template-columns: 1fr 1fr 2fr;
+    }
+    @include respond(small) {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    // btn for other component
+    button {
+        height: 50%;
+        width: 50%;
+        margin: auto;
+
+        background-color: $orange;
+        border-radius: 0.61rem;
+
+        svg {
+            width: 90%;
+            height: 90%;
+
+            stroke: $secondary;
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
