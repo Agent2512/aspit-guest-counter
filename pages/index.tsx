@@ -1,6 +1,5 @@
 import { GetServerSidePropsContext } from "next"
 import Header from "../components/main/Header";
-import { dbConnect, query } from "../utils/dbConnect"
 import { userControl } from "../utils/userControl";
 
 export default function page() {
@@ -15,11 +14,11 @@ export default function page() {
   )
 }
 
-// export async function getServerSideProps(context: GetServerSidePropsContext) {
-//   await new userControl().getAllUsers().then(i => {
-//     // console.log(i[0].id);
-//   })
-//   return {
-//     props: {}
-//   }
-// }
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  await new userControl().getUser(3,"id").then(i => {
+    console.log(i);
+  })
+  return {
+    props: {}
+  }
+}

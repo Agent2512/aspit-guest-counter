@@ -1,6 +1,5 @@
 import mysql from "serverless-mysql";
 import { BaseBuilder } from "squel";
-import { Iquery } from "../interfaces";
 
 export const dbConnect = mysql({
     config: {
@@ -16,12 +15,12 @@ export const dbConnect = mysql({
 
 })
 
-export async function query(q: BaseBuilder) {
+export async function query<t>(q: BaseBuilder) {
     try {
         const results = await dbConnect.query(q.toString())
         await dbConnect.end()
-        return JSON.parse(JSON.stringify(results)) as Iquery[]
+        return JSON.parse(JSON.stringify(results)) as t[]
     } catch (e) {
-        throw Error(e.message)
+        return false
     }
 }
