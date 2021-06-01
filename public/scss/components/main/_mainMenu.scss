@@ -1,11 +1,7 @@
 .mainMenu {
     &-toggler {
-        position: fixed;
         width: 9rem;
         height: 4rem;
-        top: 2rem;
-        left: 2.5rem;
-        z-index: 2;
 
         background-color: $orange;
         border-radius: 0.61rem;
@@ -37,7 +33,7 @@
     }
 
     background-color: $bg-primary-lighten;
-    width: 47%;
+    width: 38%;
     height: 100%;
     padding: 8rem 1rem 0 1rem;
     display: flex;

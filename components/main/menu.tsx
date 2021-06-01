@@ -1,15 +1,18 @@
 import { useState } from "react";
 import Link from 'next/link'
 import { IoClose, IoMenu } from "react-icons/io5";
+import { Fixed } from "../../layout";
 
 export default function MenuToggler() {
     const [showMenu, setShowMenu] = useState(false)
 
     return (
         <>
-            <button onClick={() => setShowMenu(!showMenu)} className="mainMenu-toggler">
-                {!showMenu ? <IoMenu /> : <IoClose />}
-            </button>
+            <Fixed top="2rem" left="2.5rem" zIndex={2}>
+                <button onClick={() => setShowMenu(!showMenu)} className="mainMenu-toggler">
+                    {!showMenu ? <IoMenu /> : <IoClose />}
+                </button>
+            </Fixed>
             {showMenu && <Menu />}
         </>
     )
@@ -22,7 +25,7 @@ function Menu() {
         as?: string;
     }
 
-    const links:links[] = [
+    const links: links[] = [
         { href: "/", text: "link 1" },
         { href: "/", text: "link 2" },
         { href: "/", text: "link 3" },
@@ -31,14 +34,13 @@ function Menu() {
     ]
 
     return (
-        <div className="mainMenu-wrapper">
+        <Fixed className="mainMenu-wrapper">
             <section className="mainMenu">
                 {links.map((i, index) =>
                     <Link key={index} href={i.href} as={i.as}>
                         <a>{i.text}</a>
                     </Link>)}
-
             </section>
-        </div>
+        </Fixed>
     )
 }

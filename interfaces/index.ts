@@ -3,3 +3,8 @@ export interface Iapi {
     message: string
     [index: string]: any
 }
+
+export interface IuserToken {
+    username: string
+    userid: string
+}
