@@ -8,3 +8,8 @@ export interface IuserToken {
     username: string
     userid: string
 }
+
+export interface userToken {
+    username: string
+    userid: string
+}

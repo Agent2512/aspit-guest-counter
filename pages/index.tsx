@@ -1,38 +1,20 @@
-import { GetServerSidePropsContext, GetStaticPropsContext, Redirect } from "next"
-import { useRouter } from "next/dist/client/router";
-import { useEffect } from "react";
+import { GetServerSidePropsContext } from "next";
 import Header from "../components/main/Header";
 import { useApi } from "../hooks/useApi";
-import { Iapi, IuserToken } from "../interfaces";
-import { userControl } from "../utils/userControl";
+import { useAuth } from "../hooks/useAuth";
+import { useCookie } from "../hooks/useCookie";
 
 export default function page() {
-  const router = useRouter()
-
-  useEffect(() => {
-    fetch(`/api/user/get`, {
-      method: "post",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({})
-    }).then(res => res.json()).then(i => console.log(i))
-  },[])
-
+  const [val, setVal] = useCookie("jwt")
+  useAuth()
   return (
     <>
       <Header />
       <main>
-        <p>this is a test</p>
+        <p>{val}</p>
+        <button onClick={() => setVal((Number(val)+1).toString())} style={{height: "100px", width: "100px"}} >test</button>
       </main>
     </>
   )
 }
 
-// export async function getServerSideProps(context: GetServerSidePropsContext) {
-//   // let auth = await new userControl().Auth(context)
-//   // if ((auth as Redirect).destination) return { redirect: auth }
-//   // else auth = auth as IuserToken
-
-//   return {
-//     props: {}
-//   }
-// }
