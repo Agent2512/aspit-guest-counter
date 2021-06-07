@@ -18,7 +18,7 @@ export default function page() {
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        useApi("user/login", { username, password }).then(i => {
+        useApi("user/signup", { username, password }).then(i => {
             
             if (i.type =="success") return router.replace("/");
             console.log(i);
@@ -29,7 +29,7 @@ export default function page() {
     return (
         <>
             <Header noMenu />
-            <main id="login">
+            <main id="signup">
                 <form onSubmit={handleSubmit}>
                     <InputField
                         onChange={handleChange}
@@ -45,7 +45,7 @@ export default function page() {
                         placeholder="password"
                         type="password"
                     />
-                    <Link href="/signup" as="/">
+                    <Link href="/login" as="/">
                         <a className="btn">signup</a>
                     </Link>
                     <button className="btn">

@@ -1,18 +1,27 @@
-import { GetServerSidePropsContext } from "next";
+import { useState } from "react";
 import Header from "../components/main/Header";
-import { useApi } from "../hooks/useApi";
 import { useAuth } from "../hooks/useAuth";
-import { useCookie } from "../hooks/useCookie";
+import { useRouter } from 'next/router'
 
 export default function page() {
-  const [val, setVal] = useCookie("jwt")
-  useAuth()
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
+
+  useAuth().then(i => {
+    if (i == false) router.replace("/login", "/")
+    else setLoading(false);
+  })
+
+  if (loading) {
+    return (
+      <div></div>
+    )
+  }
+
   return (
     <>
       <Header />
-      <main>
-        <p>{val}</p>
-        <button onClick={() => setVal((Number(val)+1).toString())} style={{height: "100px", width: "100px"}} >test</button>
+      <main id="index">
       </main>
     </>
   )

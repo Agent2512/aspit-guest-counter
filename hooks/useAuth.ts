@@ -1,3 +1,4 @@
+import { decode } from "jsonwebtoken";
 import { useEffect } from "react";
 import { userToken } from "../interfaces";
 import { useApi } from "./useApi";
@@ -8,12 +9,14 @@ export async function useAuth() {
     const user = JSON.parse("[]")
     return await useApi("user/auth", user).then((i) => {
         if (i.type == "error") {
-            location.assign("/login")
+            return false
         }
         else if (i.type == "success") {
-            const user:userToken = i.jwt
-            setVal(JSON.stringify(user))
-            return user
+            const token:string = i.jwt
+            setVal(i.jwt)
+            return token
+            // return decode(token) as userToken
         }
+        return false
     })
 }

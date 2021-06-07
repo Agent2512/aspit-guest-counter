@@ -11,7 +11,7 @@ export function useCookie(name: string): [string, (newValue: string) => void] {
 
     const set = (newValue: string) => {
         Cookies.set(name, newValue, {
-            secure: process.env.NODE_ENV !== "development",
+            // secure: process.env.NODE_ENV !== "development",
             sameSite: "strict"
         })
         setValue(newValue)
