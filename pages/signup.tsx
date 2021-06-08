@@ -16,13 +16,13 @@ export default function page() {
         name == "password" && setPassword(value)
     }
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: FormEvent) => {
         e.preventDefault()
         useApi("user/signup", { username, password }).then(i => {
-            
-            if (i.type =="success") return router.replace("/");
+
+            if (i.type == "success") return router.replace("/login", "/");
             console.log(i);
-            
+
         })
     }
 
@@ -31,6 +31,7 @@ export default function page() {
             <Header noMenu />
             <main id="signup">
                 <form onSubmit={handleSubmit}>
+                    <h2>signup</h2>
                     <InputField
                         onChange={handleChange}
                         name="username"
@@ -46,10 +47,10 @@ export default function page() {
                         type="password"
                     />
                     <Link href="/login" as="/">
-                        <a className="btn">signup</a>
+                        <button className="btn">go to login</button>
                     </Link>
-                    <button className="btn">
-                        login
+                    <button className="btn" onClick={handleSubmit}>
+                        signup
                     </button>
                 </form>
             </main>

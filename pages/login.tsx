@@ -31,6 +31,7 @@ export default function page() {
             <Header noMenu />
             <main id="login">
                 <form onSubmit={handleSubmit}>
+                    <h2>login</h2>
                     <InputField
                         onChange={handleChange}
                         name="username"
@@ -45,12 +46,12 @@ export default function page() {
                         placeholder="password"
                         type="password"
                     />
-                    <Link href="/signup" as="/">
-                        <a className="btn">signup</a>
-                    </Link>
-                    <button className="btn">
+                    <button className="btn-2">
                         login
                     </button>
+                    <Link href="/signup" as="/">
+                        <button className="btn-1">go to signup</button>
+                    </Link>
                 </form>
             </main>
         </>
