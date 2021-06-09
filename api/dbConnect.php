@@ -38,7 +38,7 @@ class dbConnect {
     {
         $result = $this->conn->query($inputSqlQuery);
 
-        if ($result === false) {
+        if ($result == false) {
             return false;
         } else {
             return true;
@@ -54,6 +54,9 @@ class dbConnect {
     } 
     public function updateData($inputSqlQuery = ""){
         return $this->run($inputSqlQuery);
+    }
+    public function test($inputSqlQuery = "") {
+        return $this->conn->query($inputSqlQuery);
     }
 }
 ?>

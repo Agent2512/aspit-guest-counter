@@ -20,7 +20,7 @@ export default function page() {
         e.preventDefault()
         useApi("user/login", { username, password }).then(i => {
             
-            if (i.type =="success") return router.replace("/");
+            // if (i.type =="success") return router.replace("/");
             console.log(i);
             
         })

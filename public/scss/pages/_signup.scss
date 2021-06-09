@@ -17,7 +17,7 @@
             ". ."
             "btn1 btn2";
 
-        width: 30%;
+        width: 40%;
         height: 50%;
 
         h2 {
@@ -72,8 +72,11 @@
             }
         }
 
+        @include respond(big) {
+            width: 65%;
+        }
         @include respond(medium) {
-            width: 60%;
+            width: 70%;
         }
         @include respond(small) {
             width: 100%;
