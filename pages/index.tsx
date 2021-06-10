@@ -5,16 +5,13 @@ import { useRouter } from 'next/router'
 
 export default function page() {
   const [loading, setLoading] = useState(true)
-  const router = useRouter()
+  useAuth(useRouter(),setLoading)
 
-  useAuth().then(i => {
-    if (i == false) router.replace("/login", "/")
-    else setLoading(false);
-  })
+
 
   if (loading) {
     return (
-      <div></div>
+      <></>
     )
   }
 

@@ -8,13 +8,14 @@ interface Props {
     type?: InputHTMLAttributes<HTMLInputElement>["type"]
     children?: ReactNode
     autoFocus?: true
+    noLabel?: true
 }
 
 export function InputField(props:Props) {
 
     return (
         <div className="inputField">
-            <label>{props.name}</label>
+            {!props.noLabel&&<label>{props.name}</label>}
             <input 
                 autoFocus={props.autoFocus}
                 name={props.name.replace(/\s/g, '')}

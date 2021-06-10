@@ -4,11 +4,13 @@ import { InputField } from "../components/InputField";
 import Header from "../components/main/Header";
 import { useApi } from "../hooks/useApi";
 import { useRouter } from "next/router";
+import { useCookie } from "../hooks/useCookie";
 
 export default function page() {
-    const router = useRouter()
+    const [token, setToken] = useCookie("jwt")
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const router = useRouter()
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
@@ -19,10 +21,9 @@ export default function page() {
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         useApi("user/login", { username, password }).then(i => {
-            
-            // if (i.type =="success") return router.replace("/");
-            console.log(i);
-            
+            if (i.type == "error") return
+            setToken(i.jwt)
+            router.replace("/");
         })
     }
 

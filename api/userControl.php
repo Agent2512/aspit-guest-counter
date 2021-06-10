@@ -1,6 +1,6 @@
 <?php
 require("dbConnect.php");
-
+require("JWT.php");
 use Firebase\JWT\JWT;
 
 class userControl
@@ -36,8 +36,8 @@ class userControl
             $Iapi["type"] = "success";
             $Iapi["message"] = "success";
 
-            $issuedAt = new DateTimeImmutable();
-            $expire = $issuedAt->modify('+6 minutes')->getTimestamp();
+            $issuedAt = time();
+            $expire = $issuedAt + 60 * 60 * 5; // 5hours 
 
             $data = [
                 'iat'  => $issuedAt,        
@@ -48,7 +48,7 @@ class userControl
             ];
 
             $token = JWT::encode(
-                $Iapi,
+                $data,
                 $this->JWT_secret,
                 "HS512"
             );
@@ -91,8 +91,26 @@ class userControl
         return $Iapi;
     }
 
-    public function auth()
+    /**
+     * @param string $token is a JWT string
+     * @return object returns user object or false
+     */
+    public function auth($token)
     {
+        $Iapi = $this->Iapi;
+
+        try {
+            $de_token = JWT::decode($token, $this->JWT_secret,array("HS512"));
+            $ifUser = $this->getUser($de_token->username);
+            if ($ifUser == false) return $Iapi;
+            $Iapi["type"] = "success";
+            $Iapi["message"] = "success";
+
+            $Iapi["token"] = $de_token;
+            return $Iapi;
+        } catch (\Throwable $th) {}
+
+        return $Iapi;
     }
 
     /**

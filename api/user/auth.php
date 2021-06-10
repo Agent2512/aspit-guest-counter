@@ -1,19 +1,14 @@
 <?php
-
+require("../userControl.php");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
-$bool = true;
+$data = json_decode(file_get_contents('php://input'));
 
-if ($bool == true) {
-    $person = new stdClass();
-    $person->type = "error";
-    $person->message = "error";
 
-    echo json_encode($person);
+if (isset($data->token)) {
+    echo json_encode((new userControl)->auth($data->token));
 } else {
-    $person["type"] = "success";
-    $person["message"] = "success";
-
-    $person["jwt"]= "555321ddd";
-    echo json_encode($person);
+    $Iapi["type"] = "error";
+    $Iapi["message"] = "need all fields";
+    echo json_encode($Iapi);
 }

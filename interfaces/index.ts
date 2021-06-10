@@ -7,9 +7,5 @@ export interface Iapi {
 export interface IuserToken {
     username: string
     userid: string
-}
-
-export interface userToken {
-    username: string
-    userid: string
+    isAdmin: boolean
 }
