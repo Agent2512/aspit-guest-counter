@@ -17,7 +17,7 @@ export default function MenuToggler() {
 
     return (
         <>
-            <Fixed top="2rem" left="2.5rem" zIndex={2}>
+            <Fixed top="2rem" left="2.5rem" zIndex={101}>
                 <button onClick={() => setShowMenu(!showMenu)} className="mainMenu-toggler">
                     {!showMenu ? <IoMenu /> : <IoClose />}
                 </button>
@@ -42,13 +42,15 @@ function Menu() {
         { href: "/", text: "link 2" },
         { href: "/", text: "link 3" },
         { href: "/", text: "link 4" },
+        { href: "/", text: "link 5" },
+
         { href: "#", text: "logout", onClick:logout},
     ]
 
     
 
     return (
-        <Fixed className="mainMenu-wrapper">
+        <Fixed className="mainMenu-wrapper" zIndex={100}>
             <section className="mainMenu">
                 {links.map((i, index) =>
                     <Link key={index} href={i.href} as={i.as}>
