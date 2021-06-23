@@ -12,5 +12,5 @@ if (isset($data->username, $data->password)) {
 } else {
     $Iapi["type"] = "error";
     $Iapi["message"] = "need all fields";
-    // echo json_encode($Iapi);
+    echo json_encode($Iapi);
 }

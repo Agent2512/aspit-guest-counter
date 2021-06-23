@@ -2,23 +2,29 @@ import { ChangeEvent, InputHTMLAttributes, ReactNode } from "react"
 
 interface Props {
     onChange: (e: ChangeEvent<HTMLInputElement>) => void
+    label?: string
     name: string
     value: string | number
+
+    required?: true
     placeholder?: string
     type?: string
     autoFocus?: true
     noLabel?: true
-    children?: ReactNode
-    min?: number
-    max?: number
 
+    NumberMin?: number
+    NumberMax?: number
+    minLength?: number
+    maxLength?: number
+
+    children?: ReactNode
 }
 
 export function InputField(props: Props) {
 
     return (
         <div className="inputField">
-            {!props.noLabel && <label>{props.name}</label>}
+            {!props.noLabel && <label>{props.label||props.name}</label>}
             <input
                 key={props.name.replace(/\s/g, '')}
                 autoFocus={props.autoFocus}
@@ -27,8 +33,11 @@ export function InputField(props: Props) {
                 type={props.type || "text"}
                 onChange={e => { props.onChange(e) }}
                 placeholder={props.placeholder}
-                min={props.min}
-                max={props.max}
+                min={props.NumberMin}
+                max={props.NumberMax}
+                minLength={props.minLength}
+                maxLength={props.maxLength}
+                required={props.required}
             />
             {props.children}
         </div>

@@ -1,0 +1,74 @@
+.addData {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    padding-top: 0.4rem;
+
+    & > .inputField {
+        width: 100%;
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+
+        padding: 0 1rem;
+
+        label {
+            margin-left: .5rem;
+            text-transform: capitalize;
+            font-size: 1.2rem;
+        }
+        select,
+        input {
+            border-radius: 0.2rem;
+        }
+    }
+
+    button {
+        margin: auto;
+        font-size: 1.5rem;
+        border-radius: 0.2rem;
+        background-color: $white;
+        
+        &:hover {
+            cursor: pointer;
+            background-color: darken($white, 20);
+        }
+    }
+
+    @include respond(small) {
+        margin-top: 5rem;
+    }
+
+    &-wrapper {
+        background-color: $bg-primary-lighten;
+        border-right: 0.4rem solid $bg-primary-darken;
+
+        @include respond(small) {
+            width: 100%;
+            height: 100%;
+            border-right: none;
+        }
+    }
+
+    &-toggler {
+        width: 3.5rem;
+        aspect-ratio: 1/1;
+        padding: 0;
+        background-color: $orange;
+        border-radius: 0.6rem;
+        margin: 0.4rem;
+        z-index: 1;
+
+        svg {
+            width: 80%;
+            height: 80%;
+            margin: auto;
+            stroke: $white;
+            fill: $white;
+        }
+
+        &:hover {
+            cursor: pointer;
+            background-color: darken($orange, 10);
+        }
+    }
+}

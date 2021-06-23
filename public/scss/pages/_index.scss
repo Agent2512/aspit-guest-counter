@@ -1,45 +1,13 @@
 #index {
     display: grid;
-    grid-template-columns: 1fr 4fr;
-    gap: 0.4rem;
+    grid-template-columns: 15rem 1fr;
 
-    .addData{
-        &-wrapper {
-
-
-
-
-            
-        }
-
-        @include respond(small) {
-            margin-top: 5rem;
-        }
-    } 
+    
 
 
 
     @include respond(small) {
-        grid-template-rows: auto 4fr;
+        grid-template-rows: auto 1fr;
         grid-template-columns: none;
-
-
-        & > button {
-            width: 3.5rem;
-            aspect-ratio: 1/1;
-            padding: 0;
-            background-color: $orange;
-            border-radius: .6rem;
-            margin: .4rem;
-
-
-            svg {
-                width: 80%;
-                height: 80%;
-                margin: auto;
-                stroke: $white;
-                fill: $white;
-            }
-        }
     }
 }
