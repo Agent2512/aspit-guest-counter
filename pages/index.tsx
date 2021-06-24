@@ -22,10 +22,7 @@ export default function page() {
       <Header />
       <main id="index" >
         <AddData />
-        <div className="chart">
-          <Charts />
-
-        </div>
+        <Charts />
       </main>
     </>
   )

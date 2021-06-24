@@ -1,10 +1,10 @@
-import { ChangeEvent, InputHTMLAttributes, ReactNode } from "react"
+import { ChangeEvent, ReactNode } from "react"
 
 interface Props {
     onChange: (e: ChangeEvent<HTMLInputElement>) => void
-    label?: string
     name: string
     value: string | number
+    label?: string
 
     required?: true
     placeholder?: string

@@ -38,7 +38,60 @@ class tableControl
         }
     }
 
-    public function get()
+    public function get($_format, $_location, $_date)
     {
+        $Iapi = $this->Iapi;
+
+        $location = $_location == "all" ? "" : "`location` = \"$_location\"";
+        $date = $_format == "year" ? "" : "`dateTime` = \"$_date\"";
+        $where = "WHERE " . $location .($date!=""?" && $date":"");
+
+
+        // $date = $format == "year" ? "`dateTime` REGEXP  \"$_date\"" : "`dateTime` = \"$_date\"";
+        // $where = $location != "" ? join(" && ", [$location, $date]) : $date;
+
+
+
+
+
+        // $sql = "SELECT `guests`,`students` FROM `visitters`";
+        // $data = $this->db->getData($sql);
+        $Iapi["location"] = $location;
+        $Iapi["date"] = $date;
+        $Iapi["test"] = $where;
+        return $Iapi;
+    }
+
+    public function getDates($format)
+    {
+        $Iapi = $this->Iapi;
+
+        $sql = "SELECT dateTime FROM `visitters`";
+        $data = $this->db->getData($sql);
+
+        if ($format == "day") {
+            $Iapi["type"] = "success";
+            $Iapi["message"] = "success";
+
+            for ($i = 0; $i < sizeof($data); $i++) {
+                $data[$i] = $data[$i]["dateTime"];
+            }
+
+            $Iapi["dates"] = $data;
+            return $Iapi;
+        } else if ($format == "year") {
+            $Iapi["type"] = "success";
+            $Iapi["message"] = "success";
+
+            for ($i = 0; $i < sizeof($data); $i++) {
+                $data[$i] = date("Y", strtotime($data[$i]["dateTime"]));
+            }
+            $data = array_unique($data);
+
+            $Iapi["dates"] = $data;
+            return $Iapi;
+        } else {
+            return $Iapi;
+        }
     }
 }
