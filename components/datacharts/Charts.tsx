@@ -10,18 +10,23 @@ export default function Charts() {
     const formats = ["day", "year"] as const;
     const [dates, setDates] = useState<string[]>([""]);
 
-    const [location, setLocation] = useState<typeof locations[number]>(locations[0])
-    const [format, setFormat] = useState<typeof formats[number]>("day")
+    const [location, setLocation] = useState<typeof locations[number]>(locations[2])
+    const [format, setFormat] = useState<typeof formats[number]>(formats[1])
     const [date, setDate] = useState<typeof dates[number]>(dates[0])
 
 
+    const [data, setData] = useState()
+
+
     useEffect(() => {
-        useApi("table/getDates", { format }).then(data => {
-            if (data.type == "success") {
-                setDates(data.dates)
-            }
-            else console.log(data);
-        })
+        if (format != "year") {
+            useApi("table/getDates", { location }).then(api => {
+                if (api.type == "success") {
+                    setDates(api.dates)
+                }
+                else console.log(api);
+            })
+        }
     }, [format, location])
 
     useEffect(() => {
@@ -29,9 +34,12 @@ export default function Charts() {
     }, [dates])
 
     useEffect(() => {
-        dates[0]!=""&&useApi("table/get", { format, location, date }).then(data => {
-            console.log(data);
-
+        useApi("table/get", { format, location, date }).then(api => {
+            if (api.type == "success") {
+                // console.log("success", api.data);
+                api.data && setData(api.data)
+            }
+            else console.log(api);
         })
     }, [format, location, date])
 
@@ -77,7 +85,7 @@ export default function Charts() {
 
 
     return (
-        <div className="chart">
+        <div className="charts">
             <div className="inputs">
                 <select name="locations" value={location} onChange={e => locations.forEach((i) => i == e.currentTarget.value && setLocation(e.currentTarget.value))} >
                     {locations.map(i => <option key={i} value={i} >{i}</option>)}
@@ -85,12 +93,12 @@ export default function Charts() {
                 <select name="formats" value={format} onChange={e => formats.forEach((i) => i == e.currentTarget.value && setFormat(e.currentTarget.value))} >
                     {formats.map(i => <option key={i} value={i} >{i}</option>)}
                 </select>
-                <select name="date" value={date} onChange={e => dates.forEach((i) => i == e.currentTarget.value && setDate(e.currentTarget.value))} >
-                    {dates.map(i => <option key={i} value={i} >{i}</option>)}
-                </select>
+                {format != "year" && <select name="date" value={date} onChange={e => dates.forEach((i) => i == e.currentTarget.value && setDate(e.currentTarget.value))} >
+                    {dates.map(i => <option key={i} value={i} >{i == "no dates" ? i : new Date(i).toLocaleDateString()}</option>)}
+                </select>}
             </div>
 
-            {/* <Chart type="area" height={350} series={series} options={options} /> */}
+            <Chart type="area" height={350} series={series} options={options} />
         </div>
     )
 }

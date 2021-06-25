@@ -44,7 +44,13 @@ class tableControl
 
         $location = $_location == "all" ? "" : "`location` = \"$_location\"";
         $date = $_format == "year" ? "" : "`dateTime` = \"$_date\"";
-        $where = "WHERE " . $location .($date!=""?" && $date":"");
+        $where = "WHERE " . $location . " && " . $date;
+        if ($location == "" && $date == "") {
+            $where = "";
+        } else if ($location == "" || $date == "") {
+            $where = str_replace(" && ", "", $where);
+        }
+
 
 
         // $date = $format == "year" ? "`dateTime` REGEXP  \"$_date\"" : "`dateTime` = \"$_date\"";
@@ -54,44 +60,35 @@ class tableControl
 
 
 
-        // $sql = "SELECT `guests`,`students` FROM `visitters`";
-        // $data = $this->db->getData($sql);
-        $Iapi["location"] = $location;
-        $Iapi["date"] = $date;
-        $Iapi["test"] = $where;
+        $sql = "SELECT * FROM `visitters` $where";
+        $data = $this->db->getData($sql);
+
+
+
+        $Iapi["type"] = "success";
+        $Iapi["message"] = "success";
+        $Iapi["data"] = $data;
         return $Iapi;
     }
 
-    public function getDates($format)
+    public function getDates($location)
     {
         $Iapi = $this->Iapi;
 
-        $sql = "SELECT dateTime FROM `visitters`";
+        $where = " WHERE `location` = \"$location\"";
+        $sql = "SELECT dateTime FROM `visitters`" . ($location == "all" ? "" : $where);
         $data = $this->db->getData($sql);
 
-        if ($format == "day") {
-            $Iapi["type"] = "success";
-            $Iapi["message"] = "success";
-
-            for ($i = 0; $i < sizeof($data); $i++) {
-                $data[$i] = $data[$i]["dateTime"];
-            }
-
-            $Iapi["dates"] = $data;
-            return $Iapi;
-        } else if ($format == "year") {
-            $Iapi["type"] = "success";
-            $Iapi["message"] = "success";
-
-            for ($i = 0; $i < sizeof($data); $i++) {
-                $data[$i] = date("Y", strtotime($data[$i]["dateTime"]));
-            }
-            $data = array_unique($data);
-
-            $Iapi["dates"] = $data;
-            return $Iapi;
-        } else {
-            return $Iapi;
+        if ($data!=false) for ($i = 0; $i < count($data); $i++) {
+            $data[$i] = $data[$i]["dateTime"];
         }
+        else if ($data == false) {
+            $data = ["no dates"];
+        }
+
+        $Iapi["type"] = "success";
+        $Iapi["message"] = "success";
+        $Iapi["dates"] = $data;
+        return $Iapi;
     }
 }
