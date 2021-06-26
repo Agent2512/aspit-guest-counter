@@ -2,7 +2,6 @@ import dynamic from 'next/dynamic';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { useApi } from '../../hooks/useApi';
-import { InputField } from "../InputField"
 const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 export default function Charts() {
@@ -14,8 +13,11 @@ export default function Charts() {
     const [format, setFormat] = useState<typeof formats[number]>(formats[1])
     const [date, setDate] = useState<typeof dates[number]>(dates[0])
 
-
-    const [data, setData] = useState()
+    interface IShow {
+        xaxis: ApexXAxis
+        series: { name: string, data: number[] }[]
+    }
+    const [show, setShow] = useState<IShow>()
 
 
     useEffect(() => {
@@ -37,28 +39,47 @@ export default function Charts() {
         useApi("table/get", { format, location, date }).then(api => {
             if (api.type == "success") {
                 // console.log("success", api.data);
-                api.data && setData(api.data)
+                if (api.table) {
+                    const table = api.table as { date: string, guests: number, students: number }[]
+                    let xaxis: ApexXAxis = {
+                        type: format == "year" ? "category" : "datetime",
+                        categories: table.map(i => i.date)
+                    }
+                    let series: { name: string, data: number[] }[] = [
+                        {
+                            name: "guests",
+                            data: table.map(i => i.guests)
+                        },
+                        {
+                            name: "students",
+                            data: table.map(i => i.students)
+                        }
+                    ]
+                    setShow({ xaxis, series })
+                }
             }
-            else console.log(api);
+            // console.log(api);
         })
     }, [format, location, date])
 
+    console.log(show);
+    
 
-
-    const series: { name: string, data: number[] }[] = [
-        {
-            name: 'guests',
-            data: [31, 40, 28, 51, 42, 109, 100]
-        }, {
-            name: 'students',
-            data: [11, 32, 45, 32, 34, 52, 41]
-        }
-    ]
+    const series: { name: string, data: number[] }[]|undefined = show?.series
 
     const options: ApexCharts.ApexOptions = {
         chart: {
             type: "area",
-            background: "#3f9e8a"
+            background: "#3f9e8a",
+            toolbar: {
+                tools: {
+                    zoom: false,
+                    zoomin: false,
+                    zoomout: false,
+                    pan: false,
+                    reset: false
+                }
+            }
         },
         dataLabels: {
             enabled: false
@@ -66,10 +87,7 @@ export default function Charts() {
         stroke: {
             curve: "smooth"
         },
-        xaxis: {
-            type: "datetime",
-            categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
-        },
+        xaxis: show?.xaxis,
         tooltip: {
             x: {
                 format: 'dd/MM/yy HH:mm'
@@ -79,10 +97,7 @@ export default function Charts() {
             "#ff0000",
             "#0000ff"
         ],
-
     }
-
-
 
     return (
         <div className="charts">

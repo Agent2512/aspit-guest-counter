@@ -2,7 +2,7 @@
 class dbConnect {
     private $conn;
     // constants a standard connection to database 
-    public function __construct($inputServerName = "localhost", $inputUserName = "root", $inputPassword = "1234", $inputDatabase = "aspit-guest-counter") {
+    public function __construct($inputServerName = "localhost", $inputUserName = "root", $inputPassword = "", $inputDatabase = "aspit-guest-counter") {
         $this->conn = new mysqli($inputServerName, $inputUserName, $inputPassword, $inputDatabase);
 
         if ($this->conn->connect_error){

@@ -51,23 +51,46 @@ class tableControl
             $where = str_replace(" && ", "", $where);
         }
 
-
-
-        // $date = $format == "year" ? "`dateTime` REGEXP  \"$_date\"" : "`dateTime` = \"$_date\"";
-        // $where = $location != "" ? join(" && ", [$location, $date]) : $date;
-
-
-
-
-
         $sql = "SELECT * FROM `visitters` $where";
         $data = $this->db->getData($sql);
 
-
-
         $Iapi["type"] = "success";
         $Iapi["message"] = "success";
-        $Iapi["data"] = $data;
+
+        if ($_format == "year") {
+            $table = [];
+            $years = [];
+
+            for ($i = 0; $i < count($data); $i++) {
+                $e = $data[$i];
+                $year = date("Y", strtotime($e["dateTime"]));
+
+                if (in_array($year, $years) == false) {
+                    array_push($years, $year);
+                }
+
+                $index = array_search($year, $years);
+                $isTable = isset($table[$index])?$table[$index]:false;
+                
+                if($isTable == false) {
+                    array_push($table, [
+                        "date" => $year,
+                        "guests" => intval($e["guests"]),
+                        "students" => intval($e["students"]),
+                    ]);
+                } 
+                else {
+                    $table[$index]["guests"] += intval($e["guests"]);
+                    $table[$index]["students"] += intval($e["students"]);
+                }
+            }
+            $Iapi["table"] = $table;
+            return $Iapi;
+        }
+
+
+
+        $Iapi["table"] = $data;
         return $Iapi;
     }
 
@@ -79,7 +102,7 @@ class tableControl
         $sql = "SELECT dateTime FROM `visitters`" . ($location == "all" ? "" : $where);
         $data = $this->db->getData($sql);
 
-        if ($data!=false) for ($i = 0; $i < count($data); $i++) {
+        if ($data != false) for ($i = 0; $i < count($data); $i++) {
             $data[$i] = $data[$i]["dateTime"];
         }
         else if ($data == false) {
