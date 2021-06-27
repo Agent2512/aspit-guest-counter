@@ -43,7 +43,7 @@ class tableControl
         $Iapi = $this->Iapi;
 
         $location = $_location == "all" ? "" : "`location` = \"$_location\"";
-        $date = $_format == "year" ? "" : "`dateTime` = \"$_date\"";
+        $date = $_format == "year" ? "" : "`dateTime` REGEXP \"$_date\"";
         $where = "WHERE " . $location . " && " . $date;
         if ($location == "" && $date == "") {
             $where = "";
@@ -54,43 +54,69 @@ class tableControl
         $sql = "SELECT * FROM `visitters` $where";
         $data = $this->db->getData($sql);
 
-        $Iapi["type"] = "success";
-        $Iapi["message"] = "success";
+        $table = [];
+        $dates = [];
 
-        if ($_format == "year") {
-            $table = [];
-            $years = [];
+        if ($data) {
+            if ($_format == "year") {
+                for ($i=0; $i < count($data); $i++) { 
+                    $element = $data[$i];
+                    $year = date("Y", strtotime($element["dateTime"]));
+    
+                    if (in_array($year, $dates)==false) {
+                        array_push($dates, $year);
+                    }
 
-            for ($i = 0; $i < count($data); $i++) {
-                $e = $data[$i];
-                $year = date("Y", strtotime($e["dateTime"]));
+                    $index = array_search($year, $dates);
 
-                if (in_array($year, $years) == false) {
-                    array_push($years, $year);
+                    if (isset($table[$index]) == false) {
+                        array_push($table, [
+                            "year" => $year,
+                            "students" => intval($element["students"]),
+                            "guests" => intval($element["guests"])
+                        ]);
+                    } 
+                    else {
+                        $table[$index]["students"] += intval($element["students"]);
+                        $table[$index]["guests"] += intval($element["guests"]);
+                    }
                 }
-
-                $index = array_search($year, $years);
-                $isTable = isset($table[$index])?$table[$index]:false;
                 
-                if($isTable == false) {
-                    array_push($table, [
-                        "date" => $year,
-                        "guests" => intval($e["guests"]),
-                        "students" => intval($e["students"]),
-                    ]);
-                } 
-                else {
-                    $table[$index]["guests"] += intval($e["guests"]);
-                    $table[$index]["students"] += intval($e["students"]);
+    
+            }
+            else if ($_format == "day") {
+                for ($i=0; $i < count($data); $i++) {
+                    $element = $data[$i];
+                    $date = date("Y-m-d H:i", strtotime($element["dateTime"]));
+
+                    if (in_array($date, $dates)==false) {
+                        array_push($dates, $date);
+                    }
+
+                    $index = array_search($date, $dates);
+
+                    if (isset($table[$index]) == false) {
+                        array_push($table, [
+                            "date" => $date,
+                            "students" => intval($element["students"]),
+                            "guests" => intval($element["guests"])
+                        ]);
+                    } 
+                    else {
+                        $table[$index]["students"] += intval($element["students"]);
+                        $table[$index]["guests"] += intval($element["guests"]);
+                    }
                 }
             }
-            $Iapi["table"] = $table;
-            return $Iapi;
         }
+        
 
-
-
-        $Iapi["table"] = $data;
+        $Iapi["table"] = $table;
+        $Iapi["dates"] = $dates;
+        $Iapi["data"] = $data;
+        $Iapi["sql"] = $sql;
+        $Iapi["type"] = "success";
+        $Iapi["message"] = "success";
         return $Iapi;
     }
 
@@ -103,11 +129,13 @@ class tableControl
         $data = $this->db->getData($sql);
 
         if ($data != false) for ($i = 0; $i < count($data); $i++) {
-            $data[$i] = $data[$i]["dateTime"];
+            $data[$i] = substr($data[$i]["dateTime"], 0, 10);
         }
         else if ($data == false) {
             $data = ["no dates"];
         }
+        
+        $data&&$data = array_unique($data);
 
         $Iapi["type"] = "success";
         $Iapi["message"] = "success";

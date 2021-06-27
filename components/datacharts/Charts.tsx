@@ -19,7 +19,7 @@ export default function Charts() {
     }
     const [show, setShow] = useState<IShow>()
 
-
+    // get all dates if not format != "year"
     useEffect(() => {
         if (format != "year") {
             useApi("table/getDates", { location }).then(api => {
@@ -30,44 +30,57 @@ export default function Charts() {
             })
         }
     }, [format, location])
-
+    // sets date to last index in date array
     useEffect(() => {
-        setDate(dates[0])
+        const index = dates.length-1
+        setDate(dates[index])
     }, [dates])
 
     useEffect(() => {
         useApi("table/get", { format, location, date }).then(api => {
-            if (api.type == "success") {
-                // console.log("success", api.data);
-                if (api.table) {
-                    const table = api.table as { date: string, guests: number, students: number }[]
-                    let xaxis: ApexXAxis = {
-                        type: format == "year" ? "category" : "datetime",
-                        categories: table.map(i => i.date)
-                    }
-                    let series: { name: string, data: number[] }[] = [
-                        {
-                            name: "guests",
-                            data: table.map(i => i.guests)
+            if (api.type ="success") {
+                const dates:string[]|false = (api.dates as string[]).length==0?false:api.dates
+                const table:{guests:number, students:number}[]|false = (api.dates as string[]).length==0?false:api.table
+                
+                if (dates&&table) {
+                    setShow({
+                        xaxis: {
+                            type: format=='year'?"category":"datetime",
+                            categories: dates.sort()
                         },
-                        {
-                            name: "students",
-                            data: table.map(i => i.students)
-                        }
-                    ]
-                    setShow({ xaxis, series })
-                }
+                        series: [
+                            {
+                                name: "guests",
+                                data: table.map(i => i.guests)
+                            },
+                            {
+                                name: "students",
+                                data: table.map(i => i.students)
+                            }
+                        ]
+                    })
+                } else setShow({
+                    xaxis: {},
+                    series : []
+                })
             }
-            // console.log(api);
         })
     }, [format, location, date])
 
-    console.log(show);
     
 
-    const series: { name: string, data: number[] }[]|undefined = show?.series
-
+    const series: { name: string, data: number[] }[]|undefined = show?.series||[
+        {
+            name: 'guests',
+            data: [0,0,0,0]
+        }, {
+            name: 'students',
+            data: [0,0,0,0]
+        }
+    ]
+    
     const options: ApexCharts.ApexOptions = {
+        xaxis: show?.xaxis,
         chart: {
             type: "area",
             background: "#3f9e8a",
@@ -87,7 +100,6 @@ export default function Charts() {
         stroke: {
             curve: "smooth"
         },
-        xaxis: show?.xaxis,
         tooltip: {
             x: {
                 format: 'dd/MM/yy HH:mm'
@@ -109,11 +121,11 @@ export default function Charts() {
                     {formats.map(i => <option key={i} value={i} >{i}</option>)}
                 </select>
                 {format != "year" && <select name="date" value={date} onChange={e => dates.forEach((i) => i == e.currentTarget.value && setDate(e.currentTarget.value))} >
-                    {dates.map(i => <option key={i} value={i} >{i == "no dates" ? i : new Date(i).toLocaleDateString()}</option>)}
+                    {dates.map(i => <option key={i} value={i} >{i == "no dates" ? i : i}</option>)}
                 </select>}
             </div>
 
-            <Chart type="area" height={350} series={series} options={options} />
+            <Chart key={JSON.stringify(show)} type="area" height={350} series={series} options={options} />
         </div>
     )
 }

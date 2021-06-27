@@ -9,13 +9,13 @@ import Charts from "../components/datacharts/Charts";
 export default function page() {
   const { height, width, size } = useWindowDimensions()
   const [loading, setLoading] = useState(true)
-  useAuth(useRouter(), setLoading)
+  // useAuth(useRouter(), setLoading)
 
 
 
-  if (loading) {
-    return (<></>)
-  }
+  // if (loading) {
+  //   return (<></>)
+  // }
 
   return (
     <>
