@@ -10,7 +10,7 @@ export default function Charts() {
     const [dates, setDates] = useState<string[]>([""]);
 
     const [location, setLocation] = useState<typeof locations[number]>(locations[2])
-    const [format, setFormat] = useState<typeof formats[number]>(formats[1])
+    const [format, setFormat] = useState<typeof formats[number]>(formats[0])
     const [date, setDate] = useState<typeof dates[number]>(dates[0])
 
     interface IShow {
@@ -36,19 +36,17 @@ export default function Charts() {
             })
         }
     }, [format, location])
-    // sets date to last index in date array
+    // sets date to newest index in date array
     useEffect(() => {
         const index = dates.length - 1
         setDate(dates[index])
     }, [dates])
-
+    // get the selected data form format, location, date
     useEffect(() => {
-        console.log(format, location, date);
-        
         useApi("table/get", { format, location, date }).then(api => {
             if (api.type = "success") {
-                const dates: string[] | false = (api.dates as string[]).length == 0 ? false : api.dates
-                const table: { guests: number, students: number }[] | false = (api.dates as string[]).length == 0 ? false : api.table
+                const dates: string[] | false = Array.isArray(api.dates) && api.dates.length == 0 ? false : api.dates
+                const table: { guests: number, students: number }[] | false = Array.isArray(api.table) && api.table.length == 0 ? false : api.table
 
                 if (dates && table) {
                     setShow({

@@ -92,6 +92,8 @@ function Normalize(props: {
 }) {
     return (
         <form className="addData" onSubmit={props.handlesubmit} >
+            <h2>add data</h2>
+
             <div className="inputField">
                 <label>location</label>
                 <select name="location" onChange={props.handlechange} value={props.values.location}>

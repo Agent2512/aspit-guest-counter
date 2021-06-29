@@ -4,6 +4,11 @@
     gap: .6rem;
     padding-top: 0.4rem;
 
+    & > h2 {
+        text-align: center;
+        text-transform:  capitalize;
+    }
+
     & > .inputField {
         width: 100%;
         display: grid;
