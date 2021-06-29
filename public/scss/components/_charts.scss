@@ -1,4 +1,7 @@
 .charts {
+    @include respond(small) {
+        transform: translate(0, -3rem);
+    }
 
     .inputs {
         grid-area: inputs;

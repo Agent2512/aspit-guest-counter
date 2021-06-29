@@ -128,18 +128,21 @@ class tableControl
         $sql = "SELECT dateTime FROM `visitters`" . ($location == "all" ? "" : $where);
         $data = $this->db->getData($sql);
 
+        $dates = [];
+
         if ($data != false) for ($i = 0; $i < count($data); $i++) {
+            array_push($dates, substr($data[$i]["dateTime"], 0, 10));
             $data[$i] = substr($data[$i]["dateTime"], 0, 10);
         }
         else if ($data == false) {
             $data = ["no dates"];
         }
         
-        $data&&$data = array_unique($data);
+        $dates&&$dates = array_unique($dates);
 
         $Iapi["type"] = "success";
         $Iapi["message"] = "success";
-        $Iapi["dates"] = $data;
+        $Iapi["dates"] = $dates;
         return $Iapi;
     }
 }

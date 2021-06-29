@@ -65,7 +65,7 @@ export default function AddData(props: Props) {
                 <button className="addData-toggler" onClick={() => setShowMenu(!showMenu)} >
                     {!showMenu ? <IoAdd /> : <IoClose />}
                 </button>
-                {showMenu && <Fixed className="addData-wrapper" >
+                {showMenu && <Fixed className="addData-wrapper" zIndex={1} >
                     <Normalize handlesubmit={handlesubmit} handlechange={handlechange} values={{ datetime, students, guests, zipcode, location }} />
                 </Fixed>}
             </>

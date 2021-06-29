@@ -24,28 +24,36 @@ export default function Charts() {
         if (format != "year") {
             useApi("table/getDates", { location }).then(api => {
                 if (api.type == "success") {
-                    setDates(api.dates)
+                    let dates: string[] = []
+                    if (Array.isArray(api.dates) == false) {
+                        var result:string[] = Object.keys(api.dates).map(function (key) {
+                            return Number(key), api.dates[key];
+                        })
+                        dates = result
+                    } else dates = api.dates
+                    setDates(dates)
                 }
-                else console.log(api);
             })
         }
     }, [format, location])
     // sets date to last index in date array
     useEffect(() => {
-        const index = dates.length-1
+        const index = dates.length - 1
         setDate(dates[index])
     }, [dates])
 
     useEffect(() => {
+        console.log(format, location, date);
+        
         useApi("table/get", { format, location, date }).then(api => {
-            if (api.type ="success") {
-                const dates:string[]|false = (api.dates as string[]).length==0?false:api.dates
-                const table:{guests:number, students:number}[]|false = (api.dates as string[]).length==0?false:api.table
-                
-                if (dates&&table) {
+            if (api.type = "success") {
+                const dates: string[] | false = (api.dates as string[]).length == 0 ? false : api.dates
+                const table: { guests: number, students: number }[] | false = (api.dates as string[]).length == 0 ? false : api.table
+
+                if (dates && table) {
                     setShow({
                         xaxis: {
-                            type: format=='year'?"category":"datetime",
+                            type: format == 'year' ? "category" : "datetime",
                             categories: dates.sort()
                         },
                         series: [
@@ -61,24 +69,25 @@ export default function Charts() {
                     })
                 } else setShow({
                     xaxis: {},
-                    series : []
+                    series: []
                 })
             }
         })
+
     }, [format, location, date])
 
-    
 
-    const series: { name: string, data: number[] }[]|undefined = show?.series||[
+
+    const series: { name: string, data: number[] }[] | undefined = show?.series || [
         {
             name: 'guests',
-            data: [0,0,0,0]
+            data: [0, 0, 0, 0]
         }, {
             name: 'students',
-            data: [0,0,0,0]
+            data: [0, 0, 0, 0]
         }
     ]
-    
+
     const options: ApexCharts.ApexOptions = {
         xaxis: show?.xaxis,
         chart: {
@@ -111,6 +120,20 @@ export default function Charts() {
         ],
     }
 
+
+    const ele = () => {
+        if (format != "year") {
+            try {
+                return <select name="date" value={date} onChange={e => dates.forEach((i) => i == e.currentTarget.value && setDate(e.currentTarget.value))} >
+                    {dates.map(i => <option key={i} value={i} >{i == "no dates" ? i : i}</option>)}
+                </select>
+            } catch (error) {
+                return undefined
+            }
+        } else return undefined
+    }
+
+
     return (
         <div className="charts">
             <div className="inputs">
@@ -120,7 +143,7 @@ export default function Charts() {
                 <select name="formats" value={format} onChange={e => formats.forEach((i) => i == e.currentTarget.value && setFormat(e.currentTarget.value))} >
                     {formats.map(i => <option key={i} value={i} >{i}</option>)}
                 </select>
-                {format != "year" && <select name="date" value={date} onChange={e => dates.forEach((i) => i == e.currentTarget.value && setDate(e.currentTarget.value))} >
+                {format != "year"&&<select name="date" value={date} onChange={e => dates.forEach((i) => i == e.currentTarget.value && setDate(e.currentTarget.value))} >
                     {dates.map(i => <option key={i} value={i} >{i == "no dates" ? i : i}</option>)}
                 </select>}
             </div>

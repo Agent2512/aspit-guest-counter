@@ -9,7 +9,7 @@
     @include respond(small) {
         
         grid-template-rows: auto 1fr;
-        grid-template-columns: auto 1fr;
-        grid-template-areas: ". inputs" ". .";
+        grid-template-columns: none;
+        // grid-template-areas: ". inputs" ". .";
     }
 }
