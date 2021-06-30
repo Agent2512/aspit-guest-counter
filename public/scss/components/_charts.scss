@@ -7,16 +7,17 @@
         grid-area: inputs;
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-content: space-evenly;
         padding: 0.8rem 0;
 
         @include respond(small) {
-            justify-content: flex-end;
+            // justify-content: flex-end;
+            margin-left: 4rem;
         }
 
         select {
             text-transform: capitalize;
-            margin: 0 1rem;
+            // margin: 0 1rem;
             font-size: 1.2rem;
             border-radius: 0.2rem;
         }

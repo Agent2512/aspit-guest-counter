@@ -7,7 +7,7 @@ import Charts from "../components/datacharts/Charts";
 
 export default function page() {
   const [loading, setLoading] = useState(true)
-  useAuth(useRouter(), setLoading)
+  useAuth(useRouter(), () => setLoading(false))
 
 
 
